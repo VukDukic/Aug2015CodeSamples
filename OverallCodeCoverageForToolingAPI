@@ -1,0 +1,29 @@
+<apex:page showHeader="true" sidebar="true" docType="html-5.0"  standardStylesheets="false">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  
+  <script>
+    $(document).ready(function(){ 
+      //Tooling API query to get the overall code coverage
+      $.ajax('/services/data/v30.0/tooling/query/?q=SELECT PercentCovered FROM ApexOrgWideCoverage',
+        {
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}');
+          },
+          success: function(response) {
+            //if the response is success, then it will return the result
+            $.each(response.records, function(index, record) {
+              //appending the result in a page
+               $('#percen').append(record.PercentCovered); 
+            });
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+             alert(jqXHR.status + ': ' + errorThrown);
+          }
+        }
+      );
+    });
+  </script>
+   
+  <p id="percen">Over all code coverage: </p>
+   
+</apex:page>
